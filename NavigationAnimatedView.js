@@ -19,29 +19,21 @@ const React = require('react');
 const StyleSheet = require('react-native').StyleSheet;
 const View = require('react-native').View;
 
-import type {
-  NavigationActionCaller,
-  NavigationAnimatedValue,
-  NavigationAnimationSetter,
-  NavigationLayout,
-  NavigationParentState,
-  NavigationScene,
-  NavigationSceneRenderer,
-} from 'NavigationTypeDefinition';
+import type { NavigationActionCaller, NavigationAnimatedValue, NavigationAnimationSetter, NavigationLayout, NavigationParentState, NavigationScene, NavigationSceneRenderer, } from 'NavigationTypeDefinition';
 
 type Props = {
-  applyAnimation: NavigationAnimationSetter,
-  navigationState: NavigationParentState,
-  onNavigate: NavigationActionCaller,
-  renderOverlay: ?NavigationSceneRenderer,
-  renderScene: NavigationSceneRenderer,
-  style: any,
+applyAnimation: NavigationAnimationSetter,
+navigationState: NavigationParentState,
+onNavigate: NavigationActionCaller,
+renderOverlay: ?NavigationSceneRenderer,
+renderScene: NavigationSceneRenderer,
+style: any,
 };
 
 type State = {
-  layout: NavigationLayout,
-  position: NavigationAnimatedValue,
-  scenes: Array<NavigationScene>,
+layout: NavigationLayout,
+position: NavigationAnimatedValue,
+scenes: Array<NavigationScene>,
 };
 
 const {PropTypes} = React;
@@ -60,8 +52,7 @@ function applyDefaultAnimation(
   ).start();
 }
 
-class NavigationAnimatedView
-  extends React.Component<any, Props, State> {
+class NavigationAnimatedView extends React.Component<any, Props, State> {
 
   _onLayout: (event: any) => void;
   _onProgressChange: (data: {value: number}) => void;
@@ -108,8 +99,7 @@ class NavigationAnimatedView
   }
 
   componentDidMount(): void {
-    this._positionListener =
-      this.state.position.addListener(this._onProgressChange);
+    this._positionListener = this.state.position.addListener(this._onProgressChange);
   }
 
   componentWillReceiveProps(nextProps: Props): void {
@@ -149,7 +139,9 @@ class NavigationAnimatedView
     });
 
     if (scenes.length !== this.state.scenes.length) {
-      this.setState({ scenes });
+      this.setState({
+        scenes
+      });
     }
   }
 
@@ -158,14 +150,14 @@ class NavigationAnimatedView
     const scenes = this._renderScenes();
     return (
       <View
-        onLayout={this._onLayout}
-        style={this.props.style}>
+      onLayout={this._onLayout}
+      style={this.props.style}>
         <View style={styles.scenes} key="scenes">
           {scenes}
         </View>
         {overlay}
       </View>
-    );
+      );
   }
 
   _renderScenes(): Array<?ReactElement> {
@@ -173,16 +165,9 @@ class NavigationAnimatedView
   }
 
   _renderScene(scene: NavigationScene): ?ReactElement {
-    const {
-      navigationState,
-      onNavigate,
-      renderScene,
-    } = this.props;
+    const {navigationState, onNavigate, renderScene, } = this.props;
 
-    const {
-      position,
-      scenes,
-    } = this.state;
+    const {position, scenes, } = this.state;
 
     return renderScene({
       layout: this.state.layout,
@@ -196,16 +181,9 @@ class NavigationAnimatedView
 
   _renderOverlay(): ?ReactElement {
     if (this.props.renderOverlay) {
-      const {
-        navigationState,
-        onNavigate,
-        renderOverlay,
-      } = this.props;
+      const {navigationState, onNavigate, renderOverlay, } = this.props;
 
-      const {
-        position,
-        scenes,
-      } = this.state;
+      const {position, scenes, } = this.state;
 
       return renderOverlay({
         layout: this.state.layout,
@@ -229,10 +207,18 @@ class NavigationAnimatedView
       isMeasured: true,
     };
 
-    layout.height.setValue(height);
-    layout.width.setValue(width);
+    Animated.event([{
+      nativeEvent: {
+        layout: {
+          height: height,
+          width: width,
+        },
+      },
+    }]);
 
-    this.setState({ layout });
+    this.setState({
+      layout
+    });
   }
 }
 
